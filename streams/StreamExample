@@ -1,0 +1,127 @@
+package streams;
+
+import data.Student;
+import data.StudentDataBase;
+
+import java.util.*;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+
+public class StreamExample {
+    public static void main(String args[]) {
+
+        //    Predicate<Student> studentPredicate=(student ->student.getGradeLevel()>=3);
+        Predicate<Student> studentgpaPredicate = (student -> student.getGpa() >= 3.9);
+
+        Map<String, List<String>> studentMap = StudentDataBase.getAllStudents().stream()
+                .filter(a -> a.getGender().equals("female"))
+                .filter(studentgpaPredicate)
+                .collect(Collectors.toMap(Student::getName, Student::getActivities));
+
+        System.out.println(studentMap);
+
+        //Get count of male and female
+        Map<String, Long> collect;
+        collect = StudentDataBase.getAllStudents().stream().collect(Collectors.groupingBy(Student::getGender, Collectors.counting()));
+
+        //
+
+
+        for(Map.Entry<String,Long> e:collect.entrySet()){
+            System.out.print(e.getKey()+" "+e.getValue());
+            System.out.println();
+
+        }
+
+
+        Map<String, Double> collect1 = StudentDataBase.getAllStudents().stream().collect(Collectors.groupingBy(Student::getGender, Collectors.summingDouble(Student::getGpa)));
+        for(Map.Entry<String,Double> e:collect1.entrySet()){
+            System.out.print(e.getKey()+" "+e.getValue());
+            System.out.println();
+
+        }
+
+        List<Integer> list = Arrays.asList(1, 2, 3, 145,4, 5, 3,11,2);
+
+        Optional<Integer> y=list.stream().max(Comparator.comparing(i->i.intValue()));
+        System.out.println("raviroy"+y);
+
+        //Calculate Average
+        OptionalDouble result = list.stream().mapToInt(i -> i.intValue()).average();
+        System.out.println(result);
+        //get Duplicate
+        list.stream().filter(i->Collections.frequency(list,i)>1).collect(Collectors.toSet()).forEach(System.out::println);
+        Set<Integer> set=new HashSet<>();
+        System.out.println("ravi");
+        list.stream().filter(i->set.add(i)).collect(Collectors.toSet()).forEach(System.out::println);
+        System.out.println("roy");
+
+       // list.stream().filter(i->i%2==0).collect(Collectors.toMap(Function.identity()));
+
+        //To Uppercase
+
+        List<String> list1 = Arrays.asList("ab", "sh", "cshd");
+        List<String> result1 = list1.stream().map(String::toUpperCase).collect(Collectors.toList());
+
+        for (String s : result1) {
+            System.out.println(s + " ");
+        }
+        //Find distict element
+        List<Integer> result2 = list.stream().distinct().collect(Collectors.toList());
+        for (Integer s : result2) {
+            System.out.print(s + " ");
+        }
+
+        //number of even element
+
+        long result3 = list.stream().filter(i -> i % 2 == 0).count();
+        System.out.println("number of even elements" + result3);
+
+        //Sum of elements
+
+        int result4 = list.stream().reduce(0, (i, j) -> i + j);
+        System.out.println("sum" + result4);
+
+        //Find highest gpa student
+        Optional<Student> studentMap2 = StudentDataBase.getAllStudents().stream().reduce((s1, s2) -> s1.getGpa() > s2.getGpa() ? s1 : s2);
+        System.out.println(studentMap2.get());
+
+
+    //limit 3 element to processed
+        List<Integer> result5 = list.stream().limit(3).collect(Collectors.toList());
+
+        for (Integer s : result5) {
+            System.out.print(s + " ");
+
+        }
+        System.out.println();
+    //Numbers starting with 1
+
+        list.stream().map(s->s+"").filter(s->s.startsWith("1")).forEach(System.out::println);
+
+        //Find duplicate
+        Set<Integer> set1=new HashSet<>();
+        list.stream().filter(a-> !set1.add(a)).forEach(System.out::println);
+
+    //minimum element
+
+        Optional<Integer> x=   list.stream().reduce((a, b)->a<b?a:b);
+
+        System.out.println(x.get());
+
+        String s1="ravi";
+        String s2="roy";
+        if(s1.equals(s2)){
+            System.out.println("yes");
+        }
+        else{
+            System.out.println("no");
+        }
+
+    }
+
+
+
+}
