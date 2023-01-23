@@ -1,0 +1,62 @@
+1./*MultiThreading using lambda expression*/
+
+ Thread t=new Thread(new Runnable(){
+    public void run(){
+    //implementation
+    }
+ });
+
+ 2./*Reentrant Lock*/
+
+ Lock lockObject=new ReentrantLock();
+
+ Resource resourse=new Resource();
+
+ public void method(){
+
+   lockObject.lock();
+   use(resource);
+   lockObject.unblock();
+ }
+  - lockIntrruptly() :-
+
+     while(true){
+       try{
+       lockObject.lockIntrruptly();
+       }
+       catch(IntruptedException){
+        cleanUpandExit();
+       }
+     }
+     lockIntrruptly helps to get out of deadlock detaction and recovery.
+     allows to do some cleanup work and exit gracefully.
+
+
+  - tryLock()
+
+     if(lockObject.tryLock()){
+      try{
+         useResource();
+      }
+      finally()
+      {
+       lockObject.unlock();
+      }
+     }
+
+     TryLock use case:
+
+     1.Video/image processing
+     2.Low latency trading system
+     3.use interface application
+
+/*ExecuterSerice */
+
+  Type:
+           ExecutorService executor= Executors.newSingleThreadExecutor();
+           ExecutorService executor1=Executors.newFixedThreadPool(5);
+           ExecutorService executor2=Executors.newCachedThreadPool();
+           ScheduledExecutorService executor3=Executors.newScheduledThreadPool(2);
+
+
+
